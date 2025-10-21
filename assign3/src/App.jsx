@@ -22,17 +22,29 @@ function Board({currentMove, squares, onPlay}) {
       if (squares[i] == turn){
         //handle picking up own tile
         selected = i
-      } else if (selected && squares[i] == null && isAdjacent(selected, i)){
+      } else if (selected !== null && squares[i] == null && isAdjacent(selected, i)){
         //handle placing down a tile
         newSquares[selected] = null //remove the old tile
         newSquares[i] = turn //place down the new tile
-        valid = true
+
+        //center square rule 
+        if (calculateWinner(newSquares) == null && squares[4] == turn && selected != 4){ //the move isnt a winning move and center piece wasn't moved
+          newSquares[i] = null
+          newSquares[selected] = turn //undo the swap
+        } else {
+          valid = true
+        }
         selected = null //reset
+
+      } else if (selected){
+        selected = null //if you cant place down the tile it should just undo your selection
       }
     } else if (!squares[i]){
       newSquares[i] = currentMove % 2 === 0? "X": "O";
       valid = true
     }
+
+    console.log(selected)
 
     //only advance the game turn if a valid move was played and it was a tile being placed down
     if (valid) onPlay(newSquares);
@@ -103,6 +115,7 @@ function calculateWinner(squares) {
 }
 
 function isAdjacent(pickup, placedown) {
+  if (pickup == null) return false
   const lines = [
     [1, 3, 4],        //adjacent to index 0
     [0, 2, 3, 4, 5],  //adjacent to index 1

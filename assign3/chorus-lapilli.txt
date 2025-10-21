@@ -33,3 +33,7 @@ checks picked-up (selected) index and placed-down (i) index to make sure they're
 I'm realizing that I want to make it more obvious which tile is selected so I will add an extra style attribute
 to whichever button is selected. This means I need to make the squares show dynamically with two for loops.
 
+Nevermind the UI thing was not working and I don't want to bugfix since I need to finish the logic first, so I may revisit.
+
+Need to be careful about checking selected null vs. non-null since selected can be zero.
+
