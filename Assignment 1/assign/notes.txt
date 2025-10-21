@@ -1,0 +1,48 @@
+tr -c 'A-Za-z' '[\n*]'
+
+1. Remove any non A-Za-z/whitespace
+2. Replace any whitespace with newline
+
+tr -cs 'A-Za-z' '[\n*]'
+
+1. Remove any non A-za-z/whitespace
+2. Replace any whitespace with newline
+3. Replace consecutive duplicate newlines with a single newline
+
+tr -cs 'A-Za-z' '[\n*]' | sort
+
+1. Remove any non A-za-z/whitespace
+2. Replace any whitespace with newline
+3. Replace consecutive duplicate newlines with a single newline
+4. Sort each line by ASCII encoding. Interestingly, all of the lines with a single newline character appear first.
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u
+
+1. Remove any non A-za-z/whitespace
+2. Replace any whitespace with newline
+3. Replace consecutive duplicate newlines with a single newline
+4. Sort each line by ASCII encoding.
+5. Remove duplicate lines. So only one line appears at the beginning with a single newline character.
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - sorted.words
+
+1. Remove any non A-za-z/whitespace
+2. Replace any whitespace with newline
+3. Replace consecutive duplicate newlines with a single newline
+4. Sort each line by ASCII encoding.
+5. Remove duplicate lines. So only one line appears at the beginning with a single newline character.
+6. Sorts the list of words into three columns: 1) words only appearing in .txt file 2) words only appearing in sorted.words 3) words appearing in both. The columns are distinguished by tabs.
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - sorted.words
+
+1. Remove any non A-za-z/whitespace
+2. Replace any whitespace with newline
+3. Replace consecutive duplicate newlines with a single newline
+4. Sort each line by ASCII encoding.
+5. Remove duplicate lines. So only one line appears at the beginning with a single newline character.
+6. Outputs words appearing in .txt file that do not appear in sorted.words.
+
+Notes for myspell
+- The order of string1 characters does not matter. So A-Za-z = a-zA-Z
+- Bash scripts can use "" or '', so it helps to use "" since ' is an allowed character
+- 

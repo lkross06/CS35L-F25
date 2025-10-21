@@ -1,0 +1,80 @@
+REGEX
+
+regex_1.txt
+- any number of any characters allowed, follow by single ? character
+regex_2.txt
+- every character must be part of the set that excludes 0-9
+regex_3.txt
+- must start at beginning of string
+- can start with every hexadecimal char EXCEPT 0, followed by any hexadecimal 
+- must be end of string
+regex_4.txt
+- must start at beginning of string
+- optional negative sign,
+  - at least one number thats not a leading zero,
+    - optional decimal point, if true then at least one more number
+    - OR just zero. -0 doesn't match but thats okay
+- must be end of string
+regex_5.txt
+- look for unitL unit (one $ or €)
+  - look for at least one of 1-9
+  - OR
+  - "0." followed by two of 0-9
+    - look for "." followed by two of 0-9 (optional) //note this will only run of we find at least one of 1-9 above
+  - no more numbers for at least 1 character after
+  - OR
+  - end string
+- OR
+  - no more numbers for at least 1 character (optional)
+  - OR
+  - start string
+- look for at least one of 1-9
+- OR "0." followed by two of 0-9
+  - look for "." followed by two of 0-9 (optional)
+  - look for unitR unit (one of $ or €)
+  
+
+PYTHON VERSION COMPARISON
+
+When I run "python2 shuf.py ..." instead of "python3 shuf.py ...", the command takes a significantly
+longer time to execute since Python 3 is just a more optimizated version of Python 2.
+
+MEDIANS
+
+/usr/bin/python (python3.11-): 0.899s
+real    0m0.899s
+real    0m0.922s
+real    0m0.847s
+
+/usr/local/cs/bin/python (python3.11+): 0.824s
+real    0m0.866s
+real    0m0.807s
+real    0m0.824s
+
+/usr/local/cs/bin/shuf (Coreutils): 0.069s
+real    0m0.081s
+real    0m0.069s
+real    0m0.068s
+
+CPU
+
+Architecture:            x86_64
+  CPU op-mode(s):        32-bit, 64-bit
+  Address sizes:         44 bits physical, 48 bits virtual
+  Byte Order:            Little Endian
+CPU(s):                  4
+  On-line CPU(s) list:   0-3
+
+OPERATING SYSTEM
+
+NAME="Red Hat Enterprise Linux"
+VERSION="9.5 (Plow)"
+
+APPENDIX
+
+I entered "argparse python" into Google Chrome and the first result was this Python
+Documentation: https://docs.python.org/3/library/argparse.html. I continuously referenced
+this site's documentation as I developed shuf.py, especially for the add_argument() function.
+
+I also consulted the GNU shuf documentation linked on Assignment 2 
+https://www.gnu.org/software/coreutils/manual/html_node/shuf-invocation.html frequently.

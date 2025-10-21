@@ -1,0 +1,79 @@
+Imagine you are a software developer at a large company and your team is developing a social media app to compete with X (formerly: Twitter). 
+
+Write 5 user stories that capture the most important requirements for such a system. 
+
+Please follow the common format (1 pts each) and list at least two acceptance criteria for each user story (1 pts each).
+For each user story, justify how it satisfies each criteria of the INVEST Principle (3 pts each). 
+
+Please submit this as a text file.
+
+------------------------------------------------------------------------------------------
+
+As a writer, I want to edit my posts so that I can fix them in case I make a typo.
+
+- Given the post has a typo (or other mistake) when the writer posts it, then they should be able to edit the post anytime after.
+- Given the typo in the post has been fixed when the writer edits it and presses the "post" button again, then it should now show the new version to everyone.
+
+Independent: Given that we're developing a social media app, it stands to reason that there would be some way for users to post content to the app. Since we're competing with X, these posts would probably be text blurbs (as are X's posts). This does not refer to any other attribute of the post other than its non-permanence.
+Negotiable: The interface for editing a post can vary, but the core idea is that some button (the word "button" can mean a lot of things when it comes to apps) allows you to edit an existing post and another button confirms those changes and updates the post for everyone.
+Valuable: A writer's work holds grammar and syntax to a higher standard, making typos a very necessary problem to fix for someone trying to promote their work.
+Estimable: From a dev's perspective, it should be doable to edit entries (posts) in whatever database system they use.
+Small: A simple UI should take a day or two to develop, and the database query part should take a day or two as well.
+Testable: Another user should be able to see the post change on their app.
+
+------------------------------------------------------------------------------------------
+
+As a content creator, I want to view interactions on my posts so that I can gauge viewer engagement.
+
+- Given the current time is some time after the content creator clicked the "post" button when they view details on their post, then the type and number of interactions on the post should be visible to them.
+- Given the current time is exactly when the content creator clicks the "post" button when they view details on their post, then the number of interactions of any time on the post should be zero.
+
+Independent: Again, the idea of posts and other users interacting with posts should be given with any social media app.
+Negotiable: I never specify exactly what type of interactions are required-- some social media apps track likes, comments, replies, shares, watch time, etc. All of this info can be useful.
+Valuable: A content creator could use this to determine what type of content to release next.
+Estimable: As a developer it seems reasonable for each user interacting with the post to trigger some kind of update in wherever the post data is stored, which can then be fetched later.
+Small: The back-end for this design would include users updating a post's data and the post creator accessing that data, and the front-end would simply be a UI (static/non-updating is fine for a simple version) that shows these numbers, definitely to the content creator but perhaps users themselves.
+Testable: A post should initially have zero interactions when first check, then if a user interacts with the post it should increase by one.
+
+------------------------------------------------------------------------------------------
+
+As a sports team manager, I want to post media (i.e. images, videos) so that I can share highlights of my team's games.
+
+- Given the current time is between the manager clicking the "create new post" and "post" buttons when the manager clicks the "add media" button/feature, then they should be prompted to upload media from their device onto the app.
+- Given the manager has attached media to the post when they click the "post" button, then viewers should be able to render and view that media in the post.
+
+Independent: In my opinion, the idea of text-based posts would be a mandatory element for this app, and adding/storing media would simply be an extra feature.
+Negotiable: The actual UI or format for posting media could be completely different-- maybe you either have to post text blurbs or pictures or videos exclusively. Although I don't think this would be the best idea, the only feature is a larger medium of things to post.
+Valuable: A sports team would undoubtedly use media to share clips and highlights-- it's hard to describe sports plays with just text.
+Estimable: This may require a redesign of the current database architecture to support larger data or implementing a compression algorithm to compact images/videos.
+Small: The actual database queries would need little redesign, but more just updating the back-end to support larger data would be the brunt of this feature. However, a well-designed back-end would ideally be scalable anyways, especially if the goal is to compete with one of the most widely-used social media apps.
+Testable: Media should not only be easy for the user to upload but should also render (at some acceptable quality-- perhaps every video is compressed to 30fps at 240p, but that's better than nothing!) for any user viewing the post.
+
+------------------------------------------------------------------------------------------
+
+As a college student, I want to be able to connect with my friends so that I have easier access to their posts.
+
+- Given two users are mutually connected when two users agree to the connection (with a "connect" button), then posts from one user will be displayed to the other user.
+- Given the current time is before two users agree to the connection when both users are on their app, then posts from one user will not necessarily be displayed to the other user, but may still be displayed anyways.
+
+Independent: The other user stories (including this one) specifically refer to individuals interacting with the app as "users", not "accounts", since technically that is not a necessary feature. Not every social media app needs accounts-- apps like YouTube do not require accounts to search and watch videos. Maybe each user agrees is given a unique ID, and that's it.
+Negotiable: The acceptance criteria denotes that both users must be connected with each other-- not like YouTube where you "follow" your favorite creators-- but the user (a college student) probably would want to mutually connect with their friends, not follow them-- that sounds creepy.
+Valuable: A college student having easier access to their friends' posts, especially friends from back home if they travelled far from home, would be invaluable for keeping in touch with them.
+Estimable: Without considering the implications of developing a way for user's to register accounts and log into them, two users with some identifying information or tag should be able to make a connection between each other. Then, when the app shows posts to one user, they must only check to see if any users that have connections with this user have posted recently.
+Small: The connections and subsequent post recommendation algorithm should only take 2-3 days to develop. Since the app may need to store millions of connections, and may need a quicker way to query for a list of connections for any user (when recommending posts), then additions to the database architecture would most likely be made. And a simple search bar UI for actually finding a user and connecting with them should take a day maximum.
+Testable: A user should still be able to see another user's posts before connecting with them. After connecting with them, they should see all of the other user's (new) posts on their app. This should be simple considering the test case with only three users in the system-- two to connect with each other and another to flood both users's apps with more posts.
+
+------------------------------------------------------------------------------------------
+
+As an artist, I want to see other posts from artist users on my app so that I can draw inspiration from them.
+
+- Given an artist expresses interest in art-related content when they answered a content preferences survey in the app, then their app will show more art-related posts than another user, who did not express interest in art-related posts.
+- Given an artist does not express interest in sports-related content when they answered the content preferences survey, then their app will not show sports-related posts.
+- Given a sports-related content creator tags their post with #sports when they write "#sports" at the end of their post and click the "post" button, then users with sports-related preferences will be more likely to see his posts than users with art-related preferences.
+
+Independent: The concept of suggested content is new here, as every other user story simply references seeing posts on their app.
+Negotiable: The actual method for learning about content preferences could be as simple as a survey or as complicated as tracking prior post interactions (as most large social media apps do). The method for actually tagging a post could be as simple as a hashtag or as complicated as natural language processing (probably something that can't be done in 3-4 days unfortunately).
+Valuable: The fictitious artist has no use for seeing sports-related content in his app, but would likely benefit largely from art-related content for inspiration.
+Estimable: Of course, this "content preferences survey" would likely be enhanced with (or simply replaced with) a complex algorithm for recommending similar posts based on previous interactions. For this purposes, something as simple as using hashtags for user's to mark their posts' content-type should suffice. It can be as broad or narrow as the developer would like (for now).
+Small: A very rudimentary idea where "art" and "sports" are separate categories (along with some other major categories such as "food", "video games", etc.) should be possible in a few days.
+Testable:
