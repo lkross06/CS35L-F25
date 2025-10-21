@@ -1,0 +1,35 @@
+10/20/2025
+
+Started by deleting all the time travel code and streamlining the logic.
+
+I see that the calculateWinner logic is in Board so I'm guessing that the new rules of the game
+should also have logic in Board.
+
+Pass currentMove (0, 1, 2, 3, ...) instead of turn (O/X) since we need different logic after move 6.
+
+Make if statements if currentMove > 6 to handle: a) picking up our OWN tile (we can check if 
+squares[i] == turn, where turn now is defined as currentMove % 2 == 0? "X" : "O")
+
+Keep a variable in Board() called selected that keeps track of the index of a tile we currently have in our
+hand. If nothing is picked up, selected = null.
+
+When we pick up a tile, we just set selected = i. When we place it down, we set newSquares[selected] = null
+(remove the old tile) and newSquares[i] = turn (place down new tile). Only then can we advance the game
+to the next player's turn.
+
+Due to how JavaScript scope works, defining a variable with "let" allows it to be used by functions defined
+inside the scope. So I can define selected in Board and it can be mutated.
+
+console.log() helps verify that all of my if statements are correct for checking which functionality of
+handleClick() to employ. You could also put and return a new <div> element with a <p> text blurb that can
+monitor an attribute of a component. So like <p>The turn number is {currentMove}</p>
+
+The calculateWinner function is the same as tic-tac-toe so that does not need to change.
+
+Now let's make sure we can only move a tile to an adjacent square. Define isAdjacent outside every scope that
+checks picked-up (selected) index and placed-down (i) index to make sure they're adjacent. Since there's only
+9 possible squares its easy enough to just make a list of every adjacent square to each square.
+
+I'm realizing that I want to make it more obvious which tile is selected so I will add an extra style attribute
+to whichever button is selected. This means I need to make the squares show dynamically with two for loops.
+

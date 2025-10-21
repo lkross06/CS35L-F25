@@ -4,38 +4,55 @@ function Square({value, onClick}) {
   return <button className="square" onClick={onClick}>{value}</button>;
 }
 
-function Board({turn, squares, onPlay}) {
+function Board({currentMove, squares, onPlay}) {
   let winner = calculateWinner(squares);
-  let status = winner? "Winner: " + winner : "Next player: " + (turn? "X" : "O");
+  let status = winner? "Winner: " + winner : "Next player: " + (currentMove % 2 === 0? "X" : "O");
+
+  let selected = null //index of selected square
 
   function handleClick(i){
-    if (squares[i] || calculateWinner(squares)) return;
+    if (calculateWinner(squares)) return;
 
     const newSquares = squares.slice(); //making a copy will help with "time travel" later
 
-    newSquares[i] = turn? "X": "O";
+    let valid = false
+    let turn = currentMove % 2 === 0? "X" : "O"
 
-    onPlay(newSquares)
+    if (currentMove >= 6){ //after 6 tiles have been placed down
+      if (squares[i] == turn){
+        //handle picking up own tile
+        selected = i
+      } else if (selected && squares[i] == null && isAdjacent(selected, i)){
+        //handle placing down a tile
+        newSquares[selected] = null //remove the old tile
+        newSquares[i] = turn //place down the new tile
+        valid = true
+        selected = null //reset
+      }
+    } else if (!squares[i]){
+      newSquares[i] = currentMove % 2 === 0? "X": "O";
+      valid = true
+    }
+
+    //only advance the game turn if a valid move was played and it was a tile being placed down
+    if (valid) onPlay(newSquares);
+  }
+
+  //generate the board
+  let board = []
+  for (let row = 0; row < 3; row++){
+    let boardRow = []
+    for (let col = 0; col < 3; col++){
+      let i = col + (row * 3)
+      boardRow.push(<Square value={squares[i]} key ={i} onClick={() => handleClick(i)} selected={(selected == i)} />)
+    }
+    board.push(<div key={row} className="board-row">{boardRow}</div>)
   }
 
   return <>
     <div className="status">{status}</div>
     <div id="board">
-      <div className="board-row">
-        <Square value={squares[0]} onClick={() => handleClick(0)} />
-        <Square value={squares[1]} onClick={() => handleClick(1)} />
-        <Square value={squares[2]} onClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onClick={() => handleClick(3)} />
-        <Square value={squares[4]} onClick={() => handleClick(4)} />
-        <Square value={squares[5]} onClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onClick={() => handleClick(6)} />
-        <Square value={squares[7]} onClick={() => handleClick(7)} />
-        <Square value={squares[8]} onClick={() => handleClick(8)} />
-      </div>
+      {board}
     </div>
   </>
 }
@@ -46,7 +63,6 @@ export default function Game() {
   );
   const [currentMove, setCurrentMove] = useState(0); //current move/turn number
   const currentState = history[currentMove]; //board state of the current move-- the last entry in history
-  const turn = currentMove % 2 === 0 //true for X, false for O
 
   function handlePlay(newSquares){
     //create an array that contains all items in history between 0 and current move with ..., then all items in newSquares
@@ -55,32 +71,12 @@ export default function Game() {
     setCurrentMove(newHistory.length - 1);
   }
 
-  function jumpTo(nextMove) {
-    setCurrentMove(nextMove);
-  }
-
-  const moves = history.map((state, move) => { //"state" represents each game state in history. "move" is an index
-    let description = (move > 0)? 'Go to move #' + move : 'Go to game start';
-
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
-    );
-  });
-
-  const extra_move = (calculateWinner(currentState))? <></> : <li>Go to move #{history.length}</li>;
-
   return (
     <div className="game">
       <div className="game-board">
-        <Board turn={turn} squares={currentState} onPlay={handlePlay}/>
+        <Board currentMove={currentMove} squares={currentState} onPlay={handlePlay}/>
       </div>
       <div className="game-info">
-        <ol>
-          {moves}
-          {extra_move}
-        </ol>
       </div>
     </div>
   );
@@ -104,4 +100,22 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function isAdjacent(pickup, placedown) {
+  const lines = [
+    [1, 3, 4],        //adjacent to index 0
+    [0, 2, 3, 4, 5],  //adjacent to index 1
+    [1, 4, 5],        //...
+    [0, 1, 4, 6, 7],
+    [0, 1, 2, 3, 5, 6, 7, 8],
+    [1, 2, 4, 7, 8],
+    [3, 4, 7],
+    [3, 4, 5, 6, 8],
+    [4, 5, 7]
+  ];
+  for (let i = 0; i < lines[pickup].length; i++) {
+    if (placedown == lines[pickup][i]) return true
+  }
+  return false;
 }
