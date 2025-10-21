@@ -1,0 +1,87 @@
+10/19/2025
+
+A component is only shown if the function header includes "export default". Otherwise you can nest components.
+
+You can just run "./helper dev" and any changes made will automatically update on the web app when you
+Ctrl+S to save the file.
+
+You can't really run logic inside of {} when you return an HTML objects-- apart from anonymous functions-- so
+it's better to "assemble" nested trees of objects and then return.
+
+Using a nested for loop with <div class="board-row>...</div> and three <Square /> per row makes a board that I
+can return as <div id="board">...</div>
+
+We know we need to store states so let's include "import { useState } from 'react';" at the top.
+
+Each square should have a unique value so we pass in a {} with a value parameter into Square(), then use {value} in
+place of X/O (will replace later). Set that value by creating a Square like: <Square value="1" /> in Board()
+
+Set the onClick parameter of the <button> in Square() to a nested function handleClick() to handle the click.
+
+Wait nevermind Square() no longer takes values because the default value of each will be set and then onClick will change
+it.
+
+Setting default value to null will make the square show nothing. Good to know
+
+Okay now that we can store each squares value, we need to have some game logic (to check for a win). Do that in Board()
+and have it just pass each square its state on every update. Soo Square() actually needs a value now but it just displays
+it like before. Easy
+
+Variables can point to functions so pass an event handler into the <button>'s onClick that points to a prop that comes from
+a nested function in Board that actually handles the event. It needs to take as parameter the number of each square so it
+knows which one to update.
+
+So now when we define the ith square it should be: <Square value={squares[i]} onClick={handleClick(i)} />
+
+Components are re-rendered when setXYZ is called on them!!!
+
+Actually now the onClick prop is actually calling handleClick and triggering an infinite loop so we can introduce an
+anonymous function that just executes handleClick with the specific parameter: {() => handleClick(i)}
+
+Now we introduce the idea of turns with a turn variable in Board that manages which icon gets filled-- "O" or "X".
+Since there's only two states, let's use T/F and just setTurn(!turn) at the end of every click.
+
+We can also use if(squares[i]) return; (same thing as if(squares[i] != null) return; ) to prevent overriding an
+already-chosen square.
+
+We can use the calculateWinner function from the tutorial that checks specific combinations of winning lines (rows,
+cols, diagonals-- since its only 3x3 its easy enough to just hard-code an array of positions) and return "O" or "X".
+This gets called on squares.
+
+We can use text <p> field to show the status of our game-- indicating who won or if nobody has won yet: 
+let winner = calculateWinner(squares); let status = winner? "Winner: " + winner : "Next player: " + (turn? "X" : "O");
+
+Note: it's a good idea to wrap any return statement value with <>, </> so that you can return multiple things without
+actually having to wrap them in an HTML element. So return <>...</>
+
+Now we want to implement the history feature, so we can store every state of the game in an array and rollback at any
+time. So we wrap the Board in a Game component, and only export that Game component instead.
+
+Now make the Game component control the state (squares, newSquares), turn, and event handler (instead of setting states
+at the end of onClick just call an onPlay(newSquares) handler)
+
+Now we make a list of buttons on the side of the game to allow the user to jump to any state. Every update, a list of
+buttons will be shown, each corresponding to the index of a board state in history. We can use map() to map each
+board state to a button list element. Put that into an ordered list in a <div> with the class "game-info".
+
+Again we use anonymous functions to call our jumpTo() function with a specific move/turn number parameter.
+
+We should assign keys whenever we make dynamic lists so that each item has some unique and traceable property.
+They need not be globally unique-- only mutually exclusive between components in the same list.
+
+Create another state to keep track of the current state of the game (as an index in our history). We set 
+currentMove = 0 initally.
+
+Now in handlePlay() we will always rewrite the history to remove any board states in the "future"-- so if the player
+goes back and then makes a move, the game state will be preserved at that point and any past future moves will be
+deleted. We can get our new history with [...history.slice(0, currentMove + 1), newSquares]. We should also now
+set the currentMove and turn.
+
+Similarly, in jumpTo(), which takes as a parameter the new current move, we can set the current move and then set
+the current turn (X or O) based on the number of the current move/turn: even means X, odd means O.
+
+Finally we just make the currently rendered board state be whatever the current move index points to, not just by
+default the last item in history.
+
+Finally finally we notice that turn is redundant and can be determined in the same way as above by the current move/turn.
+So we replace a true/false with currentMove % 2 == 0.
