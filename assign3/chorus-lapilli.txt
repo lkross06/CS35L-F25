@@ -37,3 +37,5 @@ Nevermind the UI thing was not working and I don't want to bugfix since I need t
 
 Need to be careful about checking selected null vs. non-null since selected can be zero.
 
+Check center square rule with if (calculateWinner(newSquares) == null && squares[4] == turn && selected != 4).
+
