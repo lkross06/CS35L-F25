@@ -155,6 +155,54 @@ class TestChorusLapilli(unittest.TestCase):
         tiles[0].click()
         self.assertTileIs(tiles[0], self.SYMBOL_X)
 
+    def test_no_moves_after_win(self):
+        '''Check if no moves can be made after a win.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        #XXX
+        #OO_
+        #___
+        tiles[0].click()
+        tiles[3].click()
+        tiles[1].click()
+        tiles[4].click()
+        tiles[2].click()
+        # Attempt to place another O
+        tiles[5].click()
+        self.assertTileIs(tiles[5], self.SYMBOL_BLANK)
+
+    def test_no_override(self):
+        '''Check if a tile cannot be overridden.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click()  # X
+        tiles[0].click()  # O
+        self.assertTileIs(tiles[0], self.SYMBOL_X)
+    
+    def test_move_tile(self):
+        '''Check if a tile can be moved properly.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        #before
+        #XXO
+        #OOX
+        #___
+        
+        #after
+        #XXO
+        #OO_
+        #__X
+
+        #before
+        tiles[0].click()
+        tiles[3].click()
+        tiles[1].click()
+        tiles[4].click()
+        tiles[5].click()
+        tiles[2].click()
+
+        #after
+        tiles[5].click()
+        tiles[8].click()
+        
+        self.assertTileIs(tiles[8], self.SYMBOL_X)
 
 # ================= [DO NOT MAKE ANY CHANGES BELOW THIS LINE] =================
 
